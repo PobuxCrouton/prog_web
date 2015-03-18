@@ -10,7 +10,7 @@ class Modele
 	{
 		$this->fileSrc = dirname(__FILE__).'/../../data/commande.txt';
 		if(file_exists($this->fileSrc)) {
-			@chmod($this->fileSrc, 0777);
+			@chmod($this->fileSrc, 0777); //S'assure de l'écriture du fichier
 		}
 	}
 
@@ -18,8 +18,8 @@ class Modele
 	{
 		try {
 			$commande =  "";
-			$commande .= "Parent:".$data['nomParent'].", ";
-			$commande .= "Enfant:".$data['nomEnfant'].", ";
+			$commande .= "Parent:".$data['nom_parent'].", ";
+			$commande .= "Enfant:".$data['nom_enfant'].", ";
 			$commande .= "Age: ".$data['age'].", ";
 			$commande .= "Ecole:".$data['ecole'].", ";
 			$commande .= "Lundi:".$data['lundi'].", ";

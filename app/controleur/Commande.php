@@ -1,6 +1,6 @@
 <?php 
-require_once(dirname(__FILE__).'/../modele/Modele.php');
-require_once(dirname(__FILE__).'/../modele/FormValidator.php');
+require_once(BASE_DIR.'/app/modele/Modele.php');
+require_once(BASE_DIR.'/app/modele/FormValidator.php');
 /**
 * Spécifique au projet, gère les commandes
 */
@@ -8,12 +8,12 @@ class Commande extends Controleur
 {
 	public $commandeValide;
 
-	public $success;
+	public $status;
 
 	public function checkRequest($request)
 	{
 		$this->valider($request);
-		if($this->success['success'] == true) {
+		if(count($this->status['error']) == 0) {
 			$fileManager = new Modele();
 			$fileManager->write($request); //Toujours une nouvelle ligne
 		}
@@ -21,7 +21,7 @@ class Commande extends Controleur
 	}
 
 	/**
-	 * Valide les données reçu d'un formulaire
+	 * Valide les données reçus d'un formulaire
 	 * @param $data mixed $_REQUEST
 	 * @return $success bool
 	 *
@@ -34,8 +34,8 @@ class Commande extends Controleur
 		$formValidator = new FormValidator();
 		$formValidator->load($data)
 
-					  ->estVide(array('nomParent', 'nomEnfant'))
-					  ->sansVirgule(array('nomParent', 'nomEnfant'))
+					  ->estVide(array('nom_parent', 'nom_enfant'))
+					  ->sansVirgule(array('nom_parent', 'nom_enfant'))
 					  ->ageValide('age', 4, 12)
 					  ->estSelectionne(
 					  		array(
@@ -47,10 +47,13 @@ class Commande extends Controleur
 					  		)
 					  	);
 
-		$this->success = $formValidator->close();
-		if($this->success['success'] == false) {
+		$this->status = $formValidator->close();
+		if(count($this->status['error']) > 0) {
 			$this->setErrorDetails();
+		} else {
+			$this->setSuccessDetails();
 		}
+		
 		return $this;
 	}
 
@@ -58,10 +61,10 @@ class Commande extends Controleur
 	{
 		$request = Router::request();
 		if(isset($request['submit'])) {
-			if($this->success['success'] == false){			
-				self::$notice = 'error';
-			} else {
+			if(count($this->status['error']) == 0){			
 				self::$notice = 'success';
+			} else {
+				self::$notice = 'error';
 			}	
 		}
 
@@ -70,9 +73,14 @@ class Commande extends Controleur
 
 	private function setErrorDetails()
 	{
-		foreach($this->success['error'] as $error) {
+		foreach($this->status['error'] as $error) {
 			self::$errorList[] = $error;	
 		}
 		
+	}
+
+	private function setSuccessDetails()
+	{
+		self::$successList = $this->status['success'];
 	}
 }

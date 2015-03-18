@@ -14,6 +14,8 @@ class Vue
 
 	public $errorList;
 
+	public $successList;
+
 	function __construct($argument)
 	{
 		$this->setHeader('gabarit/header.php');
@@ -57,6 +59,11 @@ class Vue
 	public function setErrorDetails($errorList)
 	{
 		$this->errorList = $errorList;
+	}
+
+	public function setSuccessDetails($successList)
+	{
+		$this->successList = $successList;
 	}
 
 	public function show()

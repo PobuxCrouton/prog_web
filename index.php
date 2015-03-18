@@ -11,6 +11,7 @@ ini_set('display_startup_errors',1);
 error_reporting(-1);
 
 require('settings.php');
+require('app/helper/helper.php');
 require('app/controleur/Router.php');
 
 $router = new Router();

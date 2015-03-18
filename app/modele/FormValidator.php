@@ -6,23 +6,19 @@
 */
 class FormValidator
 {
-	public $success;
+	public $status;
+
+	static public $static_status;
 
 	protected $formData;
 
 	public function __construct()
 	{
-		$this->success = array(
-				'success' => true,
+		$this->status = array(
+				'success' => array(),
 				'error'   => array()
 			);
 	}
-
-	protected function getData($type)
-	{
-
-	}
-
 	/**
 	 * Gère la requête $_POST / $_GET
 	 *
@@ -35,12 +31,17 @@ class FormValidator
 		return $this;
 	}
 
+	/**
+	 * @todo, conserver les données
+	 */
 	public function estVide($arrData)
 	{
 		foreach ($arrData as $data) {
 			if($this->formData[$data] == "") {
-				$this->success['success'] = false;
-				$this->success['error'][] = array($data, 'Le champs est vide');
+				$this->status['error'][$data] = 'Le champs est vide';
+			} else {
+				//Keep data that are sucessful
+				$this->status['success'][$data] = $this->formData[$data];
 			}
 		}
 		
@@ -51,8 +52,10 @@ class FormValidator
 	{
 		foreach ($arrData as $data) {
 			if($this->formData[$data] == '0') {
-				$this->success['success'] = false;
-				$this->success['error'][] = array($data, 'Le champs n\'est pas sélectionné');
+				$this->status['error'][$data] = 'Le choix du '.$data.' n\'est pas sélectionné';
+			} else {
+				//Keep data that are sucessful
+				$this->status['success'][$data] = $this->formData[$data];
 			}
 		}
 		
@@ -62,8 +65,9 @@ class FormValidator
 	public function ageValide($data, $min, $max) 
 	{
 		if($this->formData[$data] < $min || $this->formData[$data] > $max ) {
-			$this->success['success'] = false;
-			$this->success['error'][] = array($data, 'L\'âge est invalide');
+			$this->status['error'][$data] = 'L\'âge est invalide';
+		} else {
+			$this->status['success'][$data] = $this->formData[$data];
 		}
 
 		return $this;
@@ -73,8 +77,9 @@ class FormValidator
 	{
 		foreach ($arrData as $data) {
 			if(strpos($this->formData[$data], ',') !== false) {
-				$this->success['success'] = false;
-				$this->success['error'][] = array($data, 'Il ne doit pas avoir de virgule');
+				$this->status['error'][$data] = 'Il ne doit pas avoir de virgule';
+			} else {
+				$this->status['success'][$data] = $this->formData[$data];
 			}
 		}
 
@@ -83,9 +88,33 @@ class FormValidator
 
 	public function close()
 	{
-		$success = $this->success;
-		unset($this->load);
-		$this->success = false;
-		return $success;
+		// $status = $this->status;
+		// unset($this->load);
+		// $this->status = false;
+		self::$static_status = $this->status;
+		return $this->status;
+	}
+
+	static public function hasError($field, $render = false)
+	{
+		if($render) {
+			if(isset(self::$static_status['error'][$field])) {
+				$output = 'class="input-error"';
+			} else {
+				// var_dump(self::$static_status['success']);
+				$output = 'value="'.self::$static_status['success'][$field].'"';
+			}
+			echo $output;
+		} else {
+			return self::$static_status['error'][$field] || 
+			   	   self::$static_status['sucess'][$field] ;	
+		}	
+	}
+
+	static public function isSelected($select, $option)
+	{
+		if(self::$static_status['success'][$select] == $option) {
+			echo 'selected';
+		}
 	}
 }

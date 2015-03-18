@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="<?php echo REL_PATH ?>skin/css/main.css">
-	<title>Commande</title>
+	<title>Traiteur pour enfant</title>
 </head>
 <body>
 <div class="nav-wrap">
@@ -11,7 +11,9 @@
 		<ul>
 			<li><a href="<?php echo REL_PATH; ?>">Accueil</a></li>
 			<li><a href="?action=information">Information</a></li>
+			<li><a href="?action=contact">Contact</a></li>
 			<li class="cta-commande"><a href="?action=commande">Commande</a></li>
+
 		</ul>
 	</nav>
 </div>

@@ -1,6 +1,6 @@
-<p>Vérifier les erreurs suivantes :</p>
+<p><strong>Vérifier les erreurs suivantes :</strong></p>
 <ul>
 <?php foreach($this->errorList as $error): ?>
-	<li><?php echo $error[1]; ?></li>
+	<li><?php echo $error; ?></li>
 <?php endforeach; ?>
 </ul>

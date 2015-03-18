@@ -18,6 +18,12 @@ abstract class Controleur
 	static public $errorList = array();
 
 	/**
+	 * List of success
+	 * @var array
+	 */
+	static public $successList = array();
+
+	/**
 	 * Objet vue
 	 * @var Object
 	 */
@@ -32,6 +38,7 @@ abstract class Controleur
 		$this->vue = new Vue($template);
 		$this->vue->setNotice(self::$notice);
 		$this->vue->setErrorDetails(self::$errorList);
+		$this->vue->setSuccessDetails(self::$successList);
 		$this->vue->show();
 	}
 }
